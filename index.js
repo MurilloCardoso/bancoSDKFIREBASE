@@ -290,7 +290,7 @@ async function updateRecords20() {
 async function readRecords15() {
   try {
     const collectionRef = collection(db, 'usuarios');
-    const queryRef = query(collectionRef, where('idade', '==', "15"));
+    const queryRef = query(collectionRef, where('idade', '==', "40"),orderBy("idade","desc"));
     const querySnapshot = await getDocs(queryRef);
 
     let totalTime = 0; // Variável para acumular o tempo total das leituras
@@ -314,5 +314,32 @@ async function readRecords15() {
   }
 } 
 
+// Função para encontrar usuários
+async function findUsers() {
+  try {
+    // Referencie o Firestore
+    const db = getFirestore();
 
-deleteRecordsMaior20()
+    // Crie a consulta
+    const usersRef = collection(db, 'usuarios');
+    const queryRef = query(usersRef, where('idade', '!=', '20'), orderBy('idade', 'desc'));
+
+    // Execute a consulta   
+     const startTime = performance.now();
+
+    const snapshot = await getDocs(queryRef);
+    const endTime = performance.now();
+    const elapsedTime = endTime - startTime;
+    console.log('Documento lido:'+ elapsedTime, 'ms');
+
+    // Mapeie os dados dos documentos retornados
+    const users = snapshot.docs.map(doc => doc.data());
+
+    // Faça o que você precisa com os dados dos usuários
+    console.log(users);
+  } catch (error) {
+    console.error('Erro ao encontrar usuários:', error);
+  }
+}
+
+readRecords15() 
